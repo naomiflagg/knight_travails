@@ -3,7 +3,6 @@ class Board
 
   def initialize
     clean_board
-    build_graph
   end
 
   def clean_board
@@ -24,24 +23,16 @@ class Board
     @board[move[0]][move[1]] = '| K'
   end
 
-  def possible_moves(row, col)
+  def possible_moves(arr)
+    row = arr[0]
+    col = arr[1]
     moves = [
       [row - 2, col - 1], [row - 2, col + 1], [row - 1, col - 2], [row - 1, col + 2],
       [row + 1, col - 2], [row + 1, col + 2], [row + 2, col - 1], [row + 2, col + 1]
     ]
-    # Select moves that are on the board
+    # Select for moves that are on the board
     moves.select do |move|
       move[0].between?(0, 7) && move[1].between?(0, 7)
     end
-  end
-
-  def build_graph
-    @moves_graph = []
-    @board.each_with_index do |val, row|
-      val.each_index do |col|
-        @moves_graph << [[row, col], possible_moves(row, col)]
-      end
-    end
-    @moves_graph
   end
 end

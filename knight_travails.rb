@@ -23,16 +23,15 @@ class KnightTravails
   def ask_dest
     puts "Your current space: #{@current}. Destination? Format: row, col."
     loop do
-      dest = gets.chomp.split(',').map { |str| str.to_i }
-      return dest if dest.size == 2 && dest[0].between?(0, 7) && dest[1].between?(0, 7)
-
-      puts 'Destination is not on the board. Try again.'
-    end
-  end
-
-  def find_adjacents(space)
-    @board.moves_graph.each do |adj|
-      return adj[1] if adj[0] == space
+      dest = gets.chomp.split(',').map(&:to_i)
+      if dest == @current
+        puts 'You are already at your destination. Choose another.'
+      # Ensure destination is an array of two indices on the board
+      elsif dest.size == 2 && dest[0].between?(0, 7) && dest[1].between?(0, 7)
+        return dest
+      else
+        puts 'Destination is not on the board. Try again.'
+      end
     end
   end
 
@@ -56,7 +55,7 @@ class KnightTravails
   # Search adjacent spaces for destination via BFS
   def breadth_first_search(pointer, dest, q = [@current])
     # Find children aka adjacent spaces of pointer space
-    poss_moves = find_adjacents(pointer)
+    poss_moves = @board.possible_moves(pointer)
     poss_moves.each do |move|
       # Break search if destination is adjacent. Otherwise, enqueue adjacent.
       move == dest ? (return q.first) : (q << move)
